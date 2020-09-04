@@ -9,9 +9,15 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   console.log('a user connected');
   console.log(`User id: ${socket.id}`);
-  socket.on('mouse', (data)=>{
-      console.log(data);
+  
+  let newDetails =(data) =>{
+    socket.broadcast.emit('mouse', data);
+    console.log(data)
+  }
+  socket.on('mouse', (data)=>{  
+    newDetails();
   });
+  
 
 });
 
