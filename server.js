@@ -12,10 +12,11 @@ io.on('connection', (socket) => {
   
   let newDetails =(data) =>{
     socket.broadcast.emit('mouse', data);
-    console.log(data)
+    console.log(data);
   }
   socket.on('mouse', (data)=>{  
-    newDetails();
+    newDetails(data);
+
   });
   
 
