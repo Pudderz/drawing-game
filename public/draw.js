@@ -12,8 +12,10 @@ window.addEventListener('load', ()=>{
     const context = canvas.getContext('2d');
     canvas.height = 800;
     canvas.width = 800;
+    // canvas.height = window.innerHeight;
+    // canvas.width= window.innerWidth;
     context.lineCap = "round";
-    // for resizing the canvas, though atm erases canvas drawing when resized
+    // //for resizing the canvas, though atm erases canvas drawing when resized
     // window.addEventListener('resize', ()=>{
     //     canvas.height = window.innerHeight;
     //     canvas.width= window.innerWidth;
@@ -86,9 +88,17 @@ window.addEventListener('load', ()=>{
         // };
         // image.src = data.imageBinaryDate;
     }        
-
+    let colourPicker = document.querySelector('#colourPicker');
+    colourPicker.addEventListener('change', (e)=>{
+      drawingColor = e.target.value;  
+    })
+    let sizePicker = document.querySelector('#sizePicker');
+    sizePicker.addEventListener('change', (e)=>{
+      lineWidth = e.target.value;  
+    })
 
     socket.on('mouse', data => newCanvasData(data));
+
 })
 
 
