@@ -13,29 +13,20 @@ window.addEventListener('load', ()=>{
     const context = canvas.getContext('2d');
     canvas.height = 800;
     canvas.width = 800;
-    // canvas.height = window.innerHeight;
-    // canvas.width= window.innerWidth;
     context.lineCap = "round";
-    // //for resizing the canvas, though atm erases canvas drawing when resized
-    // window.addEventListener('resize', ()=>{
-    //     canvas.height = window.innerHeight;
-    //     canvas.width= window.innerWidth;
-    // });
-
+    
     const sendImage=(e, endLine = false, startLine = false)=>{
-        i++;
         console.log('sending')
         
         data = {
-            //imageBinaryDate: dataURL,
             clientX: e.clientX,
             clientY: e.clientY,
             lastX: lastPoint[0],
             lastY: lastPoint[1],
             end: endLine,
+            start: startLine,
             width: lineWidth,
             color: drawingColor,
-            start: startLine,
             id: id,
         };
         socket.emit('mouse', data)
@@ -44,6 +35,8 @@ window.addEventListener('load', ()=>{
 
     let painting = false;
     const startLine=(event)=>{
+        //sets lastPoint to current point 
+        lastPoint = [event.clientX, event.clientY];
         painting = true;
         console.log('mousedown');
         draw(event, true);
@@ -56,10 +49,10 @@ window.addEventListener('load', ()=>{
         sendImage(e, true)
         
     }
-    const draw = (e, startingBool = false) =>{
-        if(startingBool) lastPoint = [e.clientX, e.clientY];
-        console.log(lastPoint)
+    const draw = e =>{
         if(!painting) return;
+        sendImage(e, false);
+
         context.beginPath();
         context.moveTo(lastPoint[0], lastPoint[1]);
         context.strokeStyle = drawingColor;
@@ -67,7 +60,7 @@ window.addEventListener('load', ()=>{
         context.lineCap = "round";
         context.lineTo(e.clientX, e.clientY);
         context.stroke();
-        sendImage(e, false, startingBool);
+
         lastPoint = [e.clientX, e.clientY];
     }
     canvas.addEventListener('mousedown', startLine)
@@ -77,18 +70,19 @@ window.addEventListener('load', ()=>{
     const newCanvasData= data => {
         console.log(`user ${data.id} is drawing`)
         context.beginPath();
-        context.lineWidth = data.width;
         context.moveTo(data.lastX, data.lastY);// moves to last users point when drawing
         context.lineTo(data.clientX, data.clientY); // moves to current users point when drawing
         context.strokeStyle = data.color;
+        context.lineWidth = data.width;
         context.stroke();
     }        
-    
-    let colourPicker = document.querySelector('#colourPicker');
+
+    const colourPicker = document.querySelector('#colourPicker');
     colourPicker.addEventListener('change', (e)=>{
       drawingColor = e.target.value;  
     })
-    let sizePicker = document.querySelector('#sizePicker');
+
+    const sizePicker = document.querySelector('#sizePicker');
     sizePicker.addEventListener('change', (e)=>{
       lineWidth = e.target.value;  
     })
@@ -96,7 +90,7 @@ window.addEventListener('load', ()=>{
     socket.on('mouse', data => newCanvasData(data));
     socket.on('userId', userId => {
       id = userId;
-      console.log(id);
+      console.log(`Your id is user: ${id}`);
     });
 
 })
