@@ -42,10 +42,12 @@ canvasColourSelector.addEventListener('click', e => {
     } 
 })
 
-
+    
 colourPicker.addEventListener('change', e => {
-    drawingColor = e.target.value;  
-  });
+drawingColor = e.target.value;  
+}); 
+
+
   
 sizePicker.addEventListener('change', e => {
     lineWidth = e.target.value;  

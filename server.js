@@ -14,16 +14,27 @@ io.on('connection', (socket) => {
   i +=1
   socket.emit('userId', i);
 
-  socket.on('drawLine', (data)=>{  
-    socket.broadcast.emit('drawLine', data);
-  });
+  
+  // socket.on('drawLine', (data)=>{  
+  //   socket.broadcast.emit('drawLine', data);
+  // });
+  socket.on('startedDrawing', data => {
+    socket.on(`user${data.id}DrawingData`, info => {
+      socket.broadcast.emit(`user${data.id}DrawingData`, info);
+    });  
+    socket.on(`user${data.id}EndDrawingData`, ()=>{
+      socket.off(`user${data.id}DrawingData`);
+      socket.off(`user${data.id}EndDrawingData`);
+    })
+    socket.broadcast.emit('startedDrawing', data);
+  })
 });
 
 http.listen(3000, () => {
   console.log('listening on *:3000');
 });
 
-io.on('disconnect', (socket) => {
+io.on('disconnect', socket => {
     console.log('a user disconnected');
     console.log(`User id: ${socket.id}`);
   });
