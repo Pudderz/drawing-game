@@ -1,5 +1,7 @@
 const picker = document.querySelector('#picker')
-
+const colourPicker = document.querySelector('#colourPicker');
+const sizePicker = document.querySelector('#sizePicker');
+const canvasColourSelector = document.querySelector('#canvasColourSelector');
 
 function pick(event){
     let data = context.getImageData(event.clientX, event.clientY, 1, 1).data;

@@ -17,8 +17,6 @@ io.on('connection', (socket) => {
   socket.on('drawLine', (data)=>{  
     socket.broadcast.emit('drawLine', data);
   });
-  
-
 });
 
 http.listen(3000, () => {
