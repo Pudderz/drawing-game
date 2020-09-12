@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
       socket.removeAllListeners(`user${data.id}DrawingData`);
       socket.removeAllListeners(`user${data.id}EndDrawingData`);
     })
-    socket.broadcast.emit('startedDrawing', data);
+    socket.broadcast.emit('startedDrawing', data)
   })
 });
 

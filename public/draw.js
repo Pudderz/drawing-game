@@ -28,6 +28,7 @@ const draw = e =>{
 }
 
 const startDrawingData = (e) =>{
+    console.log('started');
     socket.emit('startedDrawing',{
         clientX: e.clientX,
         clientY: e.clientY,
