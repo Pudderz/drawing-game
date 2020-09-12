@@ -22,9 +22,10 @@ io.on('connection', (socket) => {
     socket.on(`user${data.id}DrawingData`, info => {
       socket.broadcast.emit(`user${data.id}DrawingData`, info);
     });  
+    //removes listeners when end line so socket listeners are not stacking up
     socket.on(`user${data.id}EndDrawingData`, ()=>{
-      socket.off(`user${data.id}DrawingData`);
-      socket.off(`user${data.id}EndDrawingData`);
+      socket.removeAllListeners(`user${data.id}DrawingData`);
+      socket.removeAllListeners(`user${data.id}EndDrawingData`);
     })
     socket.broadcast.emit('startedDrawing', data);
   })

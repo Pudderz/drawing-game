@@ -55,7 +55,7 @@ const whileDrawingData = (e)=>{
 
 
 const endDrawingData = e =>{
-    socket.emit(`user${e.id}EndDrawingData`, {})
+    socket.emit(`user${id}EndDrawingData`, {})
 }
 const endLine = e =>{
     // this if statement is used so it doesnt send information to the server when picking colours from the canvas
@@ -63,7 +63,7 @@ const endLine = e =>{
     painting = false;
     context.beginPath();
     console.log('mouseup');
-    socket.emit(`user${e.id}EndDrawingData`, {});
+    socket.emit(`user${id}EndDrawingData`, {end:true});
     //sendImage(e, lastPoint);
 }
 
@@ -89,6 +89,7 @@ window.addEventListener('load', () => {
     canvas.height = 800;
     canvas.width = 800;
     context.lineCap = "round"; 
+    context.lineJoin = "round";
 
 })
 
