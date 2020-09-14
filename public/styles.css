@@ -7,11 +7,6 @@ h1{
     position: absolute;
 }
 
-#canvas{
-    border: 1px solid black;
-    width: 100vw;
-    height: 100vh;
-}
 
 #picker{
     position: absolute;
@@ -19,3 +14,14 @@ h1{
     right:0%;
     display:flex;
 }
+#canvasContainer {
+    width: 100%;
+    text-align:center;
+ }
+ 
+ canvas {
+    display: inline-block;
+    border: 1px solid black;
+    max-width: 100%;
+    
+ }

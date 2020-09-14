@@ -11,16 +11,22 @@ let painting = false;
 const colourPicker = document.querySelector('#colourPicker');
 let enableSendCall= true;
 
-function  getMousePos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect(), // abs. size of element
+function  getMousePos(canvas, event) {
+    var rect = canvas.getBoundingClientRect(), // size of the element
         scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
         scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
-  
-    return {
-      x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
-      y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+    if(event.clientX){
+        return {
+            x: (event.clientX - rect.left) * scaleX,   // scales mouse coordinates after they have
+            y: (event.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+        }
     }
-  }
+    // If user is on a touchScreen
+    return{
+        x: (event.touches[0].clientX - rect.left) * scaleX,   
+        y: (event.touches[0].clientY - rect.top) * scaleY     
+    }  
+}
 
 
 const draw = e =>{
@@ -103,8 +109,8 @@ const endLine = e =>{
 window.addEventListener('load', () => {
     console.log('ready');
     context = canvas.getContext('2d');
-    canvas.height = 1800;
-    canvas.width = 1800;
+    canvas.height = 1000;
+    canvas.width = 1000;
     context.lineCap = "round"; 
     context.lineJoin = "round";
     context.globalCompositeOperation="source-over";
@@ -198,3 +204,7 @@ socket.on('userId', userId => {
 canvas.addEventListener('mousedown', startLine);
 canvas.addEventListener('mouseup', endLine);
 canvas.addEventListener('mousemove', draw);
+
+canvas.addEventListener('touchstart', startLine);
+canvas.addEventListener('touchmove', draw);
+canvas.addEventListener('touchend', endLine);

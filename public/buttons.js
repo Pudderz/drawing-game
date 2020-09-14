@@ -26,6 +26,7 @@ function pick(event){
     drawingColor = `#${hex.join('')}`;
     //removes colour selector
     canvas.addEventListener('mousedown', startLine);
+    canvas.addEventListener('touchstart', startLine)
     canvas.removeEventListener('click', pick);
     canvasColourSelector.textContent = "pick colour from canvas";
     canvasColourSelector.classList.remove('selected');
@@ -37,9 +38,11 @@ canvasColourSelector.addEventListener('click', e => {
     if(e.target.classList.contains('selected')){
         e.target.textContent = "Stop selection";
         canvas.removeEventListener('mousedown', startLine);
+        canvas.removeEventListener('touchstart', startLine)
         canvas.addEventListener('click', pick)
     }else{
         canvas.addEventListener('mousedown', startLine);
+        canvas.addEventListener('touchstart', startLine)
         canvas.removeEventListener('click', pick);
         e.target.textContent = "pick colour from canvas";
     } 
