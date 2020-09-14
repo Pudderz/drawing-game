@@ -9,29 +9,42 @@ drawingColor="black";
 let context = null;
 let painting = false;
 const colourPicker = document.querySelector('#colourPicker');
+let enableSendCall= true;
+
+function  getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect(), // abs. size of element
+        scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+        scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
+  
+    return {
+      x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+      y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+    }
+  }
+
 
 const draw = e =>{
     if(!painting) return;
     context.beginPath();
     context.moveTo(lastPoint[0], lastPoint[1]);
     context.strokeStyle = drawingColor;
-    console.log(context.strokeStyle);
     context.lineWidth = lineWidth;
     context.lineCap = "round";
     context.lineJoin = "round";
-    let midPoints = midPoint(lastPoint[0], lastPoint[1], e.clientX, e.clientY);
-    context.quadraticCurveTo(lastPoint[0], lastPoint[1], midPoints[0], midPoints[1]);
-    context.quadraticCurveTo(midPoints[0], midPoints[1], e.clientX, e.clientY)
-    //context.lineTo(e.clientX, e.clientY);
+    let points = getMousePos(canvas, e)
+    // let midPoints = midPoint(lastPoint[0], lastPoint[1], e.clientX, e.clientY);
+    // context.quadraticCurveTo(lastPoint[0], lastPoint[1], midPoints[0], midPoints[1]);
+    // context.quadraticCurveTo(midPoints[0], midPoints[1], e.clientX, e.clientY)
+    context.lineTo(points.x, points.y);
     context.stroke();
     
     if(enableSendCall){
         enableSendCall = false;
         whileDrawingData(e);
         setTimeout(() => enableSendCall= true, 25);
-        lastSentPoint = [e.clientX, e.clientY];
+        lastSentPoint = [points.x, points.y];
     }
-    lastPoint = [e.clientX, e.clientY];
+    lastPoint = [points.x, points.y];
 }
 
 function midPoint(firstX, firstY, secondX, secondY){
@@ -42,10 +55,11 @@ function midPoint(firstX, firstY, secondX, secondY){
 
 const startDrawingData = (e) =>{
     console.log('started');
+    let points = getMousePos(canvas, e)
     //I sets the color to colourPicker.value as otherwise if you pick a colour then instantly start drawing the colour isnt updated yet
     socket.emit('startedDrawing',{
-        clientX: e.clientX,
-        clientY: e.clientY,
+        clientX: points.x,
+        clientY: points.y,
         lineWidth: lineWidth,
         color: colourPicker.value, 
         id: id,
@@ -54,7 +68,8 @@ const startDrawingData = (e) =>{
 }
 const startLine = event => {
     //sets lastPoint to current point
-    lastPoint = [event.clientX, event.clientY];
+    let points = getMousePos(canvas, event)
+    lastPoint = [points.x, points.y];
     painting = true; 
     context.beginPath();
     draw(event);
@@ -63,9 +78,10 @@ const startLine = event => {
 }
 
 const whileDrawingData = e =>{
+    let points = getMousePos(canvas, e);
     socket.emit(`user${id}DrawingData`,{
-        clientX: e.clientX,
-        clientY: e.clientY,
+        clientX: points.x,
+        clientY: points.y,
     })
 }
 
@@ -83,27 +99,12 @@ const endLine = e =>{
     //sendImage(e, lastPoint);
 }
 
-/*
-Creating a reusable function named limiter that will limit the number of times a callback function
-is fired so that the mousemove event will not get fired so often. I got this idea from
-this blog: https://programmingwithmosh.com/javascript/javascript-throttle-and-debounce-patterns/
-*/
-let enableSendCall=true;
-function limiter(callback, time){
-    let enableCall = true;
-    return function(...args){
-        if(!enableCall) return // if false
-        enableCall = false;
-        callback.apply(this, args)
-        setTimeout(() => enableCall = true, time)
-    }
-}
 
 window.addEventListener('load', () => {
     console.log('ready');
     context = canvas.getContext('2d');
-    canvas.height = 800;
-    canvas.width = 800;
+    canvas.height = 1800;
+    canvas.width = 1800;
     context.lineCap = "round"; 
     context.lineJoin = "round";
     context.globalCompositeOperation="source-over";

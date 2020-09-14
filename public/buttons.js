@@ -5,7 +5,8 @@ const canvasColourSelector = document.querySelector('#canvasColourSelector');
 let listOfDownloads = document.querySelector('#listOfDownloadOptions');
 let eraser = document.querySelector('#erase');
 function pick(event){
-    let data = context.getImageData(event.clientX, event.clientY, 1, 1).data;
+    let points = getMousePos(canvas, event)
+    let data = context.getImageData(points.x, points.y, 1, 1).data;
     let colourData = [].slice.call(data, 0, 4);
     let rgbColour = colourData.slice(0,3);
     if(rgbColour.join() == '0,0,0') {
