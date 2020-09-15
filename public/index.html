@@ -7,20 +7,36 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!--<h1>Drawing Lobby</h1>-->
-    <div id="canvasContainer">
-        <canvas id="canvas">Your browser does not support Canvases</canvas>
+    <div id="drawingDisplay">
+        <!--<h1>Drawing Lobby</h1>-->
+        <div id="canvasContainer">
+            <canvas id="canvas">Your browser does not support Canvases</canvas>
+        </div>
+        <div id = "picker">
+            <h3 id="username">User:</h3>
+            <label for="sizePicker">
+                Pen Size:
+                <input type="range" id="sizePicker" min="2" max="40" value="10">
+            </label>
+            <label for="colourPicker" id="colourPickerlabel">
+                Colour:
+                <input id="colourPicker" type="color"> 
+            </label>
+            
+            <button id="canvasColourSelector">Pick colour from canvas</button>
+            
+            <button id="erase">Eraser</button>
+            
+                <button id="saveImage">Create download link of Image</button>
+            <div id="downloads">    
+                <ol id="listOfDownloadOptions">
+                </ol>    
+            </div>
+        </div>    
     </div>
-    <div id = "picker">
-        <input type="range" id="sizePicker" min="2" max="40" value="10">
-        <input id="colourPicker" type="color"> 
-        <button id="canvasColourSelector">Pick colour from canvas</button>
-        <button id="saveImage">Save</button>
-        <button id="erase">eraser</button>
-    </div>
-    <ol id="listOfDownloadOptions">
-    </ol>
     
+    
+
     <script src="../node_modules/socket.io-client/dist/socket.io.js"></script>
     <script src="draw.js"></script>
     <script src="buttons.js"></script>

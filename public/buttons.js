@@ -34,6 +34,7 @@ function pick(event){
 
 canvasColourSelector.addEventListener('click', e => {
     context.globalCompositeOperation = "source-over";//turns off eraser
+    eraser.textContent = "Eraser"
     e.target.classList.toggle('selected');
     if(e.target.classList.contains('selected')){
         e.target.textContent = "Stop selection";
@@ -50,6 +51,7 @@ canvasColourSelector.addEventListener('click', e => {
 
 colourPicker.addEventListener('click', () => {
 context.globalCompositeOperation = "source-over";//turns off eraser
+eraser.textContent = "Eraser"
 });
    
 colourPicker.addEventListener('change', e => {
@@ -68,7 +70,8 @@ saveImage.addEventListener('click', e=>{
     const list = document.createElement('li');
     let timestamp = new Date();
     link.download = 'image.png';
-    link.textContent = `Download Image at ${timestamp.toTimeString()}`;
+    timestamp = timestamp.toTimeString().match(/^\d\d:\d\d:\d\d/i);
+    link.textContent = `Download Image at ${timestamp}`;
     
     canvas.toBlob(function(blob){
         link.href = URL.createObjectURL(blob);
@@ -85,4 +88,9 @@ eraser.addEventListener('click', e=>{
     eraser.classList.toggle('Erasing');
     context.globalCompositeOperation = (eraser.classList.contains('Erasing'))?
         "destination-out": "source-over";
+    if(eraser.classList.contains('Erasing')){
+        eraser.textContent = "Stop Erasing";
+    }else{
+        eraser.textContent = "Eraser";
+    }
 });

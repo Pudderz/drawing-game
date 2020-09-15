@@ -80,7 +80,6 @@ const startLine = event => {
     context.beginPath();
     draw(event);
     startDrawingData(event);
-    console.log('mousedown');
 }
 
 const whileDrawingData = e =>{
@@ -100,7 +99,6 @@ const endLine = e =>{
     if(painting == false) return; 
     painting = false;
     context.beginPath();
-    console.log('mouseup');
     socket.emit(`user${id}EndDrawingData`, {end:true});
     //sendImage(e, lastPoint);
 }
